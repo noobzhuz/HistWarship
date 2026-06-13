@@ -16,7 +16,8 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const ship = ships.find((item) => item.slug === (await params).slug);
+  const { slug } = await params;
+  const ship = ships.find((item) => item.slug === slug);
   return { title: ship?.name ?? "Historic Ship" };
 }
 

@@ -31,25 +31,39 @@ a {
   border: 0;
 }
 
-.atlas-marker span {
+.atlas-marker svg {
   display: block;
-  width: 30px;
-  height: 30px;
-  transform: rotate(45deg);
-  border: 4px solid #ffffff;
-  border-radius: 50% 50% 50% 0;
-  background: #fbbf24;
-  box-shadow: 0 3px 12px rgb(15 23 42 / 45%);
-}
-
-.atlas-marker span::after {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border-radius: 999px;
-  background: #0f172a;
+  width: 32px;
+  height: 44px;
+  filter: drop-shadow(0 3px 5px rgb(15 23 42 / 45%));
 }
 
 .leaflet-popup-content-wrapper {
   border-radius: 18px;
+}
+
+.atlas-map-hero .leaflet-top.leaflet-left {
+  bottom: 1.75rem;
+  top: auto;
+}
+
+.leaflet-control-zoom {
+  border: 0;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 20%);
+}
+
+.leaflet-control-zoom a {
+  border-color: #e2e8f0;
+  color: #0f172a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  height: 2.5rem;
+  line-height: 2.35rem;
+  width: 2.5rem;
+}
+
+.leaflet-control-zoom a:hover,
+.leaflet-control-zoom a:focus {
+  background: #f8fafc;
+  color: #0369a1;
 }

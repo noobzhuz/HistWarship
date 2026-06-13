@@ -584,12 +584,15 @@ Deployment
 
 # Future Versions
 
+
+
 ## Version 2
 
 * User image uploads
 * AI translation
 * Edit proposal system
 * Expanded moderation tools
+* Localized map tiles
 
 ## Version 3
 
