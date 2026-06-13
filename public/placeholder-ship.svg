@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Historic warship placeholder</title>
+  <desc id="desc">Stylized warship at sea</desc>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#172554"/><stop offset="1" stop-color="#0369a1"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#sky)"/><circle cx="930" cy="135" r="70" fill="#fef3c7" opacity=".85"/>
+  <path d="M0 500q160-35 300 0t300 0t300 0t300 0v175H0z" fill="#0c4a6e"/>
+  <path d="M160 420h810l-120 120H280z" fill="#cbd5e1"/><path d="M410 330h310v90H410z" fill="#94a3b8"/><path d="M520 215h45v115h-45zM585 255h40v75h-40z" fill="#cbd5e1"/>
+  <path d="M542 215v-75M542 165h120M690 300h150M700 285l140 30" stroke="#e2e8f0" stroke-width="12"/><path d="M330 390h-120M760 390h170" stroke="#64748b" stroke-width="24"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Museum site placeholder</title>
+  <desc id="desc">Stylized waterfront museum skyline</desc>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0c4a6e"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#sky)"/><circle cx="940" cy="140" r="65" fill="#fbbf24" opacity=".9"/>
+  <path d="M0 470Q180 430 340 475T690 470T1030 462T1200 480V675H0Z" fill="#075985"/>
+  <path d="M190 410h560l110 72H115z" fill="#e2e8f0"/><path d="M300 300h320v110H300z" fill="#f8fafc"/><path d="M330 330h55v80h-55zm95 0h55v80h-55zm95 0h55v80h-55z" fill="#0f172a"/>
+  <path d="M790 300v175M760 340h60M785 300l-40 65h90z" stroke="#f8fafc" stroke-width="14" fill="none"/>
+</svg>
