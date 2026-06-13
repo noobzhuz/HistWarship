@@ -28,6 +28,20 @@ Most existing resources solve only one part of the problem:
 
 Historic Warships Atlas combines these elements into a single experience centered around preserved naval vessels.
 
+## Discovery First
+
+Historic Warships Atlas is designed around discovery rather than popularity.
+
+The goal is to help users discover museum ships they may not already know about, rather than promoting only the most famous vessels.
+
+Version 1 should emphasize exploration and geographic discovery over ranking systems.
+
+## No Ratings Policy
+
+Version 1 intentionally excludes ship rating systems and popularity rankings.
+
+The purpose is to encourage discovery rather than popularity competition.
+
 The platform should allow users to:
 
 1. Discover museum ships they did not know existed.
@@ -122,6 +136,26 @@ Examples:
 
 # Platform Structure
 
+## Content Hierarchy
+
+Ships are the primary content entity of the platform.
+
+Museum sites primarily serve as geographic containers and discovery points.
+
+The map is organized around museum sites because multiple ships may exist at a single location.
+
+However, users should be able to discover, search, and discuss individual ships directly.
+
+Examples:
+
+- Map Marker → Battleship Cove
+- Museum Site Page → Battleship Cove
+- Ship Pages → USS Massachusetts, USS Lionfish, USS Joseph P. Kennedy Jr.
+
+Searching for a ship should always lead directly to the ship page rather than requiring navigation through the museum site page.
+
+---
+
 ## Museum Sites
 
 Map markers represent museum sites or locations.
@@ -158,22 +192,27 @@ Searching "USS Lionfish" should open the USS Lionfish page, even though the map 
 
 # Homepage
 
-Homepage follows a community portal design.
+Homepage follows a map-first discovery design.
 
-Main sections:
+The world map is the primary visual element and should occupy most of the initial viewport.
 
-1. Search Bar
-2. Featured Map Preview
-3. Featured Locations
-4. Recent Discussions
-5. Recent Trip Reports
-6. Featured Ships
+Users should be able to begin exploring ships immediately without scrolling.
 
-Primary message:
+Community content supports discovery and long-term engagement but should not dominate the first-screen experience.
 
-Explore Historic Warships Around the World.
+Recommended homepage structure:
 
-The homepage should emphasize discovery rather than technical military content.
+1. Navigation Bar
+2. Hero Map Section
+
+   * Large interactive map
+   * Floating search box
+   * Short tagline
+3. Recent Discussions
+4. Recent Trip Reports
+5. Random Discovery
+
+A rotating selection of ships intended to encourage exploration rather than popularity-based recommendations.
 
 ---
 
@@ -202,9 +241,24 @@ Future filters may include:
 * Nation
 * Preservation Status
 
+Additional Discovery Features:
+
+* Explore nearby ships
+* Explore nearby museum sites
+
+The map should encourage geographic exploration and travel planning.
+
 ---
 
 # Search System
+
+Search is a primary navigation mechanism equal in importance to the map.
+
+Users may begin their journey through:
+
+* Map exploration
+* Ship search
+* Museum search
 
 Search must support:
 
@@ -251,6 +305,18 @@ Short introduction.
 
 Highlights explaining why the ship is worth visiting.
 
+Why Visit is one of the platform's key differentiators.
+
+Historical information already exists on Wikipedia and other sources.
+
+Why Visit should answer:
+
+"Why should someone visit this ship in person?"
+
+Why Visit should prioritize practical and experiential value over technical specifications.
+
+The goal is to explain why a visitor may want to experience the ship in person.
+
 Examples:
 
 * Rare surviving vessel
@@ -273,6 +339,8 @@ Examples:
 ## Visit Notes
 
 User-generated practical information.
+
+Visitor experience information should be considered as important as historical information.
 
 Examples:
 
@@ -330,6 +398,24 @@ Ships:
 # Community System
 
 Two levels of discussion.
+
+## Ship-Centered Community
+
+Community discussions should remain ship-centered.
+
+The platform is not intended to become a general social network.
+
+Community exists to deepen exploration rather than replace it.
+
+The map and discovery experience remain the primary entry point of the platform.
+
+Discussion topics should remain connected to:
+
+* Ships
+* Museums
+* Naval history
+* Preservation projects
+* Visiting experiences
 
 ## Global Discussions
 
