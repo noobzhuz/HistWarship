@@ -1,4 +1,4 @@
-# Historic Warships Atlas
+# Warship Explorer
 
 A Next.js discovery experience for preserved naval vessels and the museum sites that care for them. This initial scaffold uses mock data only.
 

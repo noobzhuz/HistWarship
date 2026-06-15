@@ -1,10 +1,10 @@
-# HistWarship
+# Warship Explorer
 
 Version 1 Product Requirements Document (PRD)
 
 ## Project Vision
 
-Historic Warships Atlas is a global platform dedicated to preserved historic naval vessels and museum ships.
+Warship Explorer is a global platform dedicated to preserved historic naval vessels and museum ships.
 
 The platform combines:
 
@@ -26,11 +26,11 @@ Most existing resources solve only one part of the problem:
 * Google Maps provides location information.
 * Reddit provides discussions.
 
-Historic Warships Atlas combines these elements into a single experience centered around preserved naval vessels.
+Warship Explorer combines these elements into a single experience centered around preserved naval vessels.
 
 ## Discovery First
 
-Historic Warships Atlas is designed around discovery rather than popularity.
+Warship Explorer is designed around discovery rather than popularity.
 
 The goal is to help users discover museum ships they may not already know about, rather than promoting only the most famous vessels.
 

@@ -14,7 +14,7 @@ export function SiteHeader() {
           <span className="grid size-9 place-items-center rounded-full bg-amber-400 text-slate-950">
             <Anchor className="size-5" aria-hidden="true" />
           </span>
-          <span>Historic Warships Atlas</span>
+          <span>Warship Explorer</span>
         </Link>
         <nav className="flex items-center gap-1" aria-label="Main navigation">
           {navigation.map((item) => (

@@ -14,7 +14,7 @@ Use:
 - Supabase Storage
 
 Project goal:
-Build Historic Warships Atlas, a global discovery and community platform for preserved historic naval vessels and museum ships.
+Build Warship Explorer, a global discovery and community platform for preserved historic naval vessels and museum ships.
 
 Important product rules:
 - Map markers represent museum sites / POIs, not individual ships.

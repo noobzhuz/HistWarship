@@ -21,7 +21,7 @@ export function MapHero() {
     <section className="bg-white lg:grid lg:h-[calc(100svh-4rem)] lg:min-h-[680px] lg:grid-cols-[minmax(360px,42%)_1fr]" aria-labelledby="homepage-heading">
       <div className="order-1 overflow-y-auto border-b border-slate-200 px-5 py-8 sm:px-8 lg:max-h-[calc(100svh-4rem)] lg:border-b-0 lg:border-r lg:px-10 lg:py-10">
         <div className="mx-auto max-w-xl lg:mx-0">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-sky-800">Historic Warships Atlas</p>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-sky-800">Warship Explorer</p>
           <h1 id="homepage-heading" className="mt-3 text-4xl font-black tracking-tight text-slate-950 xl:text-5xl">Explore naval history around the world</h1>
           <p className="mt-4 leading-7 text-slate-600">Every preserved ship has a place and a story. Find museum ships, understand their history, and plan a visit without needing to be a naval expert.</p>
 

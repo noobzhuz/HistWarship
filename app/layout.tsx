@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Historic Warships Atlas", template: "%s | Historic Warships Atlas" },
+  title: { default: "Warship Explorer", template: "%s | Warship Explorer" },
   description: "Discover preserved historic naval vessels and the museum sites that care for them.",
 };
 

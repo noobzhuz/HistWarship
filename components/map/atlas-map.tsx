@@ -17,6 +17,10 @@ const poiIcon = L.divIcon({
 });
 
 const siteBounds = L.latLngBounds(sites.map((site) => site.coordinates));
+const discreteWheelLockMs = 180;
+const discreteSequenceGapMs = 120;
+const discretePixelThreshold = 40;
+const discreteZoomStep = 0.5;
 
 function fitGlobalView(map: L.Map) {
   map.fitBounds(siteBounds, {
@@ -42,6 +46,53 @@ function MapController({ selectedSiteSlug }: { selectedSiteSlug?: string }) {
     const site = sites.find((candidate) => candidate.slug === selectedSiteSlug);
     if (site) map.flyTo(site.coordinates, 7, { duration: 1.1 });
   }, [map, selectedSiteSlug]);
+
+  return null;
+}
+
+function InputAwareWheelZoom() {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    let lastDiscreteEventAt = -Infinity;
+    let lastZoomAt = -Infinity;
+    let lastDirection = 0;
+
+    const handleWheel = (event: WheelEvent) => {
+      const now = performance.now();
+      const direction = event.deltaY < 0 ? 1 : event.deltaY > 0 ? -1 : 0;
+      if (!direction) return;
+
+      const hasDiscreteDelta = event.deltaMode !== WheelEvent.DOM_DELTA_PIXEL || Math.abs(event.deltaY) >= discretePixelThreshold;
+      const continuesDiscreteSequence = now - lastDiscreteEventAt < discreteSequenceGapMs;
+      const isLockedDiscreteDirection = direction === lastDirection && now - lastZoomAt < discreteWheelLockMs;
+
+      if (!hasDiscreteDelta && !continuesDiscreteSequence && !isLockedDiscreteDirection) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      lastDiscreteEventAt = now;
+
+      const directionChanged = lastDirection !== 0 && direction !== lastDirection;
+      if (!directionChanged && now - lastZoomAt < discreteWheelLockMs) return;
+
+      const currentZoom = map.getZoom();
+      const targetZoom = Math.min(map.getMaxZoom(), Math.max(map.getMinZoom(), currentZoom + direction * discreteZoomStep));
+
+      lastDirection = direction;
+      lastZoomAt = now;
+
+      if (targetZoom !== currentZoom) {
+        const cursorPoint = map.mouseEventToContainerPoint(event);
+        map.setZoomAround(cursorPoint, targetZoom);
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { capture: true, passive: false });
+
+    return () => container.removeEventListener("wheel", handleWheel, { capture: true });
+  }, [map]);
 
   return null;
 }
@@ -81,6 +132,7 @@ export function AtlasMap({ compact = false, hero = false, selectedSiteSlug }: At
       className={cn("z-0 w-full", compact ? "h-[430px] rounded-3xl" : hero ? "atlas-map-hero h-[54svh] min-h-[430px] lg:h-full lg:min-h-[680px]" : "h-[calc(100vh-4rem)]")}
     >
       <MapController selectedSiteSlug={selectedSiteSlug} />
+      {!compact && <InputAwareWheelZoom />}
       {!compact && <ResetViewControl />}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
