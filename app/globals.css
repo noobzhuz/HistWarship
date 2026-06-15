@@ -67,3 +67,34 @@ a {
   background: #f8fafc;
   color: #0369a1;
 }
+
+.atlas-zoom-slider-control {
+  pointer-events: auto;
+}
+
+.atlas-zoom-slider {
+  width: 1.25rem;
+  height: 8.5rem;
+  cursor: ns-resize;
+  accent-color: #0369a1;
+  direction: rtl;
+  writing-mode: vertical-lr;
+}
+
+.atlas-site-label {
+  pointer-events: none;
+  border: 0;
+  border-radius: 0.5rem;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 2px 8px rgb(15 23 42 / 20%);
+  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 0.3rem 0.5rem;
+  white-space: nowrap;
+}
+
+.atlas-site-label::before {
+  display: none;
+}
