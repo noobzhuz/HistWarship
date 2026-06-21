@@ -7,4 +7,272 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Application models will be introduced with the database-backed phase.
+model UserProfile {
+  id          String   @id @db.Uuid
+  displayName String?
+  avatarUrl   String?
+  bio         String?
+  role        UserRole @default(USER)
+
+  posts                 Post[]
+  comments              Comment[]
+  editProposals         EditProposal[]
+  reviewedEditProposals EditProposal[] @relation("ReviewedEditProposals")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MuseumSite {
+  id      String @id @default(cuid())
+  slug    String @unique
+  name    String
+  summary String
+
+  city    String?
+  region  String?
+  country String
+  address String?
+
+  latitude  Decimal @db.Decimal(9, 6)
+  longitude Decimal @db.Decimal(9, 6)
+
+  officialWebsite String?
+  wikipediaUrl    String?
+  sourceNotes     String?
+
+  description          String?
+  visitorInfo          String?
+  accessibilityNotes   String?
+  visitDurationMinutes Int?
+
+  openStatus         OpenStatus @default(UNKNOWN)
+  statusNote         String?
+  statusUpdatedAt    DateTime?
+  expectedReopenDate DateTime?
+  expectedReopenText String?
+  statusSourceUrl    String?
+
+  heroImageUrl  String?
+  galleryImages Json?
+
+  ships Ship[]
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([country])
+  @@index([city])
+  @@index([latitude, longitude])
+}
+
+model Ship {
+  id      String @id @default(cuid())
+  slug    String @unique
+  name    String
+  summary String
+
+  alternateNames String[] @default([])
+  hullNumber     String?
+  shipClass      String?
+  type           ShipType
+  typeLabel      String?
+
+  nation             String?
+  country            String?
+  launchedYear       Int?
+  commissionedYear   Int?
+  decommissionedYear Int?
+
+  preservationStatus PreservationStatus @default(UNKNOWN)
+  openStatus         OpenStatus         @default(UNKNOWN)
+  statusNote         String?
+  statusUpdatedAt    DateTime?
+  expectedReopenDate DateTime?
+  expectedReopenText String?
+  statusSourceUrl    String?
+
+  overview      String?
+  whyVisit      String?
+  history       String?
+  technicalInfo Json?
+  visitorNotes  String?
+
+  officialWebsite String?
+  wikipediaUrl    String?
+  sourceNotes     String?
+
+  heroImageUrl  String?
+  galleryImages Json?
+
+  siteId String
+  site   MuseumSite @relation(fields: [siteId], references: [id], onDelete: Restrict)
+
+  posts Post[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([country])
+  @@index([nation])
+  @@index([type])
+  @@index([shipClass])
+  @@index([siteId])
+}
+
+model Post {
+  id    String  @id @default(cuid())
+  slug  String? @unique
+  title String
+  body  String
+
+  type   PostType      @default(DISCUSSION)
+  status ContentStatus @default(PUBLISHED)
+
+  authorId String      @db.Uuid
+  author   UserProfile @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  shipId String?
+  ship   Ship?   @relation(fields: [shipId], references: [id], onDelete: SetNull)
+
+  siteId String?
+  site   MuseumSite? @relation(fields: [siteId], references: [id], onDelete: SetNull)
+
+  tags     PostTag[]
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([shipId])
+  @@index([siteId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model PostTag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  posts Post[]
+}
+
+model Comment {
+  id     String        @id @default(cuid())
+  body   String
+  status ContentStatus @default(PUBLISHED)
+
+  authorId String      @db.Uuid
+  author   UserProfile @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[] @relation("CommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+  @@index([parentId])
+}
+
+model EditProposal {
+  id         String         @id @default(cuid())
+  targetType EditTargetType
+  targetId   String?
+
+  title        String?
+  summary      String?
+  payload      Json
+  status       ReviewStatus @default(PENDING)
+  reviewerNote String?
+
+  submittedById String      @db.Uuid
+  submittedBy   UserProfile @relation(fields: [submittedById], references: [id], onDelete: Restrict)
+
+  reviewedById String?      @db.Uuid
+  reviewedBy   UserProfile? @relation("ReviewedEditProposals", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  createdAt  DateTime  @default(now())
+  reviewedAt DateTime?
+
+  @@index([targetType, targetId])
+  @@index([status])
+  @@index([submittedById])
+  @@index([reviewedById])
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum ShipType {
+  BATTLESHIP
+  CRUISER
+  DESTROYER
+  FRIGATE
+  CORVETTE
+  AIRCRAFT_CARRIER
+  SUBMARINE
+  AMPHIBIOUS_SHIP
+  MINESWEEPER
+  TRAINING_SHIP
+  SAILING_WARSHIP
+  MISSILE_BOAT
+  OTHER
+}
+
+enum OpenStatus {
+  OPEN
+  TEMPORARILY_CLOSED
+  EXTERIOR_ONLY
+  MEMORIAL_ONLY
+  CLOSED
+  UNKNOWN
+}
+
+enum PreservationStatus {
+  PRESERVED
+  PARTIALLY_PRESERVED
+  RESTORATION
+  DISPLAY_ONLY
+  UNKNOWN
+}
+
+enum PostType {
+  DISCUSSION
+  ARTICLE
+  TRIP_REPORT
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+  DELETED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NEEDS_MORE_INFO
+}
+
+enum EditTargetType {
+  SHIP
+  MUSEUM_SITE
+  NEW_SHIP
+  NEW_MUSEUM_SITE
+}
