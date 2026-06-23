@@ -21,7 +21,7 @@ export const sites: MuseumSite[] = [
     coordinates: [41.7066, -71.1633],
     summary: "A waterfront museum with a varied fleet spanning battleships, submarines, and destroyers.",
     image: "/placeholder-site.svg",
-    shipSlugs: ["uss-massachusetts", "uss-lionfish"],
+    shipSlugs: ["uss-massachusetts", "uss-lionfish", "uss-joseph-p-kennedy-jr"],
   },
   {
     id: "site-belfast",
@@ -115,6 +115,18 @@ export const ships: Ship[] = [
     country: "United States",
     siteSlug: "battleship-cove",
     summary: "A Balao-class fleet submarine open to visitors alongside Battleship Cove's surface ships.",
+    image: "/placeholder-ship.svg",
+  },
+  {
+    id: "ship-joseph-p-kennedy-jr",
+    slug: "uss-joseph-p-kennedy-jr",
+    name: "USS Joseph P. Kennedy Jr.",
+    className: "Gearing class",
+    type: "Destroyer",
+    launched: 1945,
+    country: "United States",
+    siteSlug: "battleship-cove",
+    summary: "A Gearing-class destroyer preserved at Battleship Cove after Cold War and Korean War-era service.",
     image: "/placeholder-ship.svg",
   },
   {

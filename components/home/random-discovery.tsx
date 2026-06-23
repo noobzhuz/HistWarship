@@ -7,7 +7,7 @@ import { ShipCard } from "@/components/ships/ship-card";
 import { Button } from "@/components/ui/button";
 import { ships } from "@/lib/mock-data";
 
-const discoveryOrder = [4, 1, 6, 2, 7, 0, 5, 3];
+const discoveryOrder = [5, 1, 7, 2, 8, 0, 6, 3, 4];
 
 export function RandomDiscovery() {
   const [offset, setOffset] = useState(0);
