@@ -594,10 +594,17 @@ Deployment
 * Expanded moderation tools
 * Localized map tiles
 
+Personal Collections:
+
+* Favorite ships
+* Favorite museum sites
+* Want to Visit
+* Visited
+
+Collections are private by default and intended for trip planning and long-term exploration. They should not create public rankings or popularity leaderboards.
+
 ## Version 3
 
-* Visited ships tracking
-* Collections
 * Personal profiles
 * Advanced recommendations
 * Community contributor reputation
