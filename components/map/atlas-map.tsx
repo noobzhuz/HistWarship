@@ -5,7 +5,7 @@ import L from "leaflet";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
 
-import { getShipsAtSite, sites } from "@/lib/mock-data";
+import type { AtlasMapSite } from "@/lib/map-data";
 import { cn } from "@/lib/utils";
 
 const poiIcon = L.divIcon({
@@ -16,7 +16,6 @@ const poiIcon = L.divIcon({
   popupAnchor: [0, -40],
 });
 
-const siteBounds = L.latLngBounds(sites.map((site) => site.coordinates));
 const discreteSequenceGapMs = 120;
 const discretePixelThreshold = 40;
 const discreteWheelZoomScale = 0.001;
@@ -29,7 +28,20 @@ const sliderMaxZoom = 18;
 const sliderZoomStep = 0.1;
 const mapZoomSnap = 0.01;
 
-function fitGlobalView(map: L.Map) {
+function getSiteBounds(sites: AtlasMapSite[]) {
+  if (sites.length === 0) return undefined;
+
+  return L.latLngBounds(sites.map((site) => site.coordinates));
+}
+
+function formatSiteLocation(site: AtlasMapSite) {
+  return [site.city, site.region, site.country].filter(Boolean).join(", ");
+}
+
+function fitGlobalView(map: L.Map, sites: AtlasMapSite[]) {
+  const siteBounds = getSiteBounds(sites);
+  if (!siteBounds) return;
+
   map.fitBounds(siteBounds, {
     paddingTopLeft: [40, 40],
     paddingBottomRight: [40, 40],
@@ -37,22 +49,22 @@ function fitGlobalView(map: L.Map) {
   });
 }
 
-function MapController({ selectedSiteSlug }: { selectedSiteSlug?: string }) {
+function MapController({ sites, selectedSiteSlug }: { sites: AtlasMapSite[]; selectedSiteSlug?: string }) {
   const map = useMap();
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       map.invalidateSize();
-      fitGlobalView(map);
+      fitGlobalView(map, sites);
     }, 0);
 
     return () => window.clearTimeout(timeout);
-  }, [map]);
+  }, [map, sites]);
 
   useEffect(() => {
     const site = sites.find((candidate) => candidate.slug === selectedSiteSlug);
     if (site) map.flyTo(site.coordinates, 7, { duration: 1.1 });
-  }, [map, selectedSiteSlug]);
+  }, [map, selectedSiteSlug, sites]);
 
   return null;
 }
@@ -175,10 +187,8 @@ function ZoomSliderControl({ zoom }: { zoom: number }) {
   );
 }
 
-type Site = (typeof sites)[number];
-
 type SiteMarkerProps = {
-  site: Site;
+  site: AtlasMapSite;
   showLabel: boolean;
   pinnedSiteSlug?: string;
   onPin: (siteSlug: string) => void;
@@ -189,7 +199,6 @@ function SiteMarker({ site, showLabel, pinnedSiteSlug, onPin, onUnpin }: SiteMar
   const markerRef = useRef<L.Marker>(null);
   const clickPinnedRef = useRef(false);
   const isPinned = pinnedSiteSlug === site.slug;
-  const siteShips = getShipsAtSite(site.slug);
 
   useEffect(() => {
     const marker = markerRef.current;
@@ -238,10 +247,10 @@ function SiteMarker({ site, showLabel, pinnedSiteSlug, onPin, onUnpin }: SiteMar
       <Popup minWidth={240}>
         <div className="space-y-2 font-sans">
           <p className="text-base font-bold text-slate-950">{site.name}</p>
-          <p className="text-sm text-slate-600">{site.city}, {site.country}</p>
+          <p className="text-sm text-slate-600">{formatSiteLocation(site)}</p>
           <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Ships here</p>
           <ul className="space-y-1">
-            {siteShips.map((ship) => <li key={ship.id}><Link className="font-semibold text-sky-800 hover:underline" href={`/ships/${ship.slug}`}>{ship.name}</Link></li>)}
+            {site.ships.map((ship) => <li key={ship.id}><Link className="font-semibold text-sky-800 hover:underline" href={`/ships/${ship.slug}`}>{ship.name}</Link></li>)}
           </ul>
           <Link className="inline-block pt-1 font-bold text-sky-800 hover:underline" href={`/sites/${site.slug}`}>View museum site</Link>
         </div>
@@ -250,7 +259,7 @@ function SiteMarker({ site, showLabel, pinnedSiteSlug, onPin, onUnpin }: SiteMar
   );
 }
 
-function MapContents({ compact, selectedSiteSlug }: { compact: boolean; selectedSiteSlug?: string }) {
+function MapContents({ sites, compact, selectedSiteSlug }: { sites: AtlasMapSite[]; compact: boolean; selectedSiteSlug?: string }) {
   const map = useMap();
   const [zoom, setZoom] = useState(map.getZoom());
   const [pinnedSiteSlug, setPinnedSiteSlug] = useState<string>();
@@ -266,10 +275,10 @@ function MapContents({ compact, selectedSiteSlug }: { compact: boolean; selected
 
   return (
     <>
-      <MapController selectedSiteSlug={selectedSiteSlug} />
+      <MapController sites={sites} selectedSiteSlug={selectedSiteSlug} />
       {!compact && <InputAwareWheelZoom />}
       {!compact && <ZoomSliderControl zoom={zoom} />}
-      {!compact && <ResetViewControl />}
+      {!compact && <ResetViewControl sites={sites} />}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -288,13 +297,13 @@ function MapContents({ compact, selectedSiteSlug }: { compact: boolean; selected
   );
 }
 
-function ResetViewControl() {
+function ResetViewControl({ sites }: { sites: AtlasMapSite[] }) {
   const map = useMap();
 
   return (
     <button
       type="button"
-      onClick={() => fitGlobalView(map)}
+      onClick={() => fitGlobalView(map, sites)}
       className="absolute bottom-8 right-3 z-[800] rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-800 shadow-lg hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
     >
       Reset view
@@ -303,12 +312,13 @@ function ResetViewControl() {
 }
 
 type AtlasMapProps = {
+  sites: AtlasMapSite[];
   compact?: boolean;
   hero?: boolean;
   selectedSiteSlug?: string;
 };
 
-export function AtlasMap({ compact = false, hero = false, selectedSiteSlug }: AtlasMapProps) {
+export function AtlasMap({ sites, compact = false, hero = false, selectedSiteSlug }: AtlasMapProps) {
   return (
     <MapContainer
       center={[35, 5]}
@@ -322,7 +332,7 @@ export function AtlasMap({ compact = false, hero = false, selectedSiteSlug }: At
       wheelPxPerZoomLevel={240}
       className={cn("z-0 w-full", compact ? "h-[430px] rounded-3xl" : hero ? "atlas-map-hero h-[54svh] min-h-[430px] lg:h-full lg:min-h-[680px]" : "h-[calc(100vh-4rem)]")}
     >
-      <MapContents compact={compact} selectedSiteSlug={selectedSiteSlug} />
+      <MapContents sites={sites} compact={compact} selectedSiteSlug={selectedSiteSlug} />
     </MapContainer>
   );
 }

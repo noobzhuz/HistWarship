@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { AtlasMapSite } from "@/lib/map-data";
 
 const AtlasMap = dynamic(() => import("@/components/map/atlas-map").then((module) => module.AtlasMap), {
   ssr: false,
@@ -8,11 +9,12 @@ const AtlasMap = dynamic(() => import("@/components/map/atlas-map").then((module
 });
 
 type MapLoaderProps = {
+  sites: AtlasMapSite[];
   compact?: boolean;
   hero?: boolean;
   selectedSiteSlug?: string;
 };
 
-export function MapLoader({ compact = false, hero = false, selectedSiteSlug }: MapLoaderProps) {
-  return <AtlasMap compact={compact} hero={hero} selectedSiteSlug={selectedSiteSlug} />;
+export function MapLoader({ sites, compact = false, hero = false, selectedSiteSlug }: MapLoaderProps) {
+  return <AtlasMap sites={sites} compact={compact} hero={hero} selectedSiteSlug={selectedSiteSlug} />;
 }

@@ -8,11 +8,12 @@ import { useState } from "react";
 import { HeroSearch } from "@/components/home/hero-search";
 import { MapLoader } from "@/components/map/map-loader";
 import { Button } from "@/components/ui/button";
-import { sites, ships } from "@/lib/mock-data";
+import type { AtlasMapSite } from "@/lib/map-data";
+import { ships } from "@/lib/mock-data";
 
 const discoveryOrder = [5, 1, 7, 2, 8, 0, 6, 3, 4];
 
-export function MapHero() {
+export function MapHero({ sites }: { sites: AtlasMapSite[] }) {
   const [selectedSiteSlug, setSelectedSiteSlug] = useState<string>();
   const [discoveryOffset, setDiscoveryOffset] = useState(0);
   const discoveryShips = Array.from({ length: 3 }, (_, index) => ships[discoveryOrder[(discoveryOffset + index) % discoveryOrder.length]]).filter(Boolean);
@@ -68,7 +69,7 @@ export function MapHero() {
       </div>
 
       <div className="order-2 relative bg-slate-200 lg:min-h-0">
-        <MapLoader hero selectedSiteSlug={selectedSiteSlug} />
+        <MapLoader sites={sites} hero selectedSiteSlug={selectedSiteSlug} />
         <p className="pointer-events-none absolute bottom-7 left-1/2 z-[700] -translate-x-1/2 rounded-full bg-white/90 px-4 py-2 text-center text-xs font-semibold text-slate-700 shadow backdrop-blur sm:text-sm">Scroll over the map to zoom. Select a marker to see the ships there.</p>
       </div>
     </section>
