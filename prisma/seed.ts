@@ -1,8 +1,9 @@
-import { PrismaClient, ShipType } from "@prisma/client";
+import { ContentStatus, PostType, PrismaClient, ShipType } from "@prisma/client";
 
 import { ships, sites } from "../lib/mock-data";
 
 const prisma = new PrismaClient();
+const demoUserId = "00000000-0000-4000-8000-000000000001";
 
 const postTags = [
   "trip-report",
@@ -53,8 +54,17 @@ const getSeedShipName = (ship: (typeof ships)[number]) => {
   return ship.name;
 };
 
+const requireSeedTarget = (target: { id: string } | undefined, label: string) => {
+  if (!target) {
+    throw new Error(`Missing seeded target for demo community content: ${label}.`);
+  }
+
+  return target;
+};
+
 async function main() {
   const siteBySlug = new Map<string, { id: string }>();
+  const shipBySlug = new Map<string, { id: string }>();
 
   for (const site of sites) {
     const seededSite = await prisma.museumSite.upsert({
@@ -91,7 +101,7 @@ async function main() {
       throw new Error(`Missing museum site for ship "${ship.slug}" with site slug "${ship.siteSlug}".`);
     }
 
-    await prisma.ship.upsert({
+    const seededShip = await prisma.ship.upsert({
       where: { slug: ship.slug },
       update: {
         name: getSeedShipName(ship),
@@ -118,7 +128,10 @@ async function main() {
         heroImageUrl: ship.image,
         siteId: site.id,
       },
+      select: { id: true },
     });
+
+    shipBySlug.set(ship.slug, seededShip);
   }
 
   for (const slug of postTags) {
@@ -130,6 +143,86 @@ async function main() {
       create: {
         slug,
         name: titleCaseTag(slug),
+      },
+    });
+  }
+
+  await prisma.userProfile.upsert({
+    where: { id: demoUserId },
+    update: {
+      displayName: "Demo Preview Contributor",
+      bio: "Demo account used for preview community content in development.",
+    },
+    create: {
+      id: demoUserId,
+      displayName: "Demo Preview Contributor",
+      bio: "Demo account used for preview community content in development.",
+    },
+  });
+
+  const salem = requireSeedTarget(shipBySlug.get("uss-salem"), "USS Salem");
+  const battleshipCove = requireSeedTarget(siteBySlug.get("battleship-cove"), "Battleship Cove");
+  const belfast = requireSeedTarget(shipBySlug.get("hms-belfast"), "HMS Belfast");
+
+  const demoPosts = [
+    {
+      slug: "demo-uss-salem-first-visit-discussion",
+      title: "[Demo] What should first-time visitors notice aboard USS Salem?",
+      body: "Demo/preview discussion content for development. This placeholder is intended to help test future community previews without presenting real user activity.",
+      type: PostType.DISCUSSION,
+      shipId: salem.id,
+      siteId: undefined,
+      tagSlugs: ["question", "history"],
+    },
+    {
+      slug: "demo-battleship-cove-family-visit",
+      title: "[Demo] Planning a family visit to Battleship Cove",
+      body: "Demo/preview discussion content for development. This placeholder can be used later to test site-linked community previews and visit-planning tags.",
+      type: PostType.DISCUSSION,
+      shipId: undefined,
+      siteId: battleshipCove.id,
+      tagSlugs: ["visit-planning", "question"],
+    },
+    {
+      slug: "demo-hms-belfast-short-trip-report",
+      title: "[Demo Trip Report] A short visit aboard HMS Belfast",
+      body: "Demo/preview trip report content for development. This is not real community activity; it exists to test future trip report previews.",
+      type: PostType.TRIP_REPORT,
+      shipId: belfast.id,
+      siteId: undefined,
+      tagSlugs: ["trip-report", "photography"],
+    },
+  ];
+
+  for (const post of demoPosts) {
+    const tagConnections = post.tagSlugs.map((slug) => ({ slug }));
+
+    await prisma.post.upsert({
+      where: { slug: post.slug },
+      update: {
+        title: post.title,
+        body: post.body,
+        type: post.type,
+        status: ContentStatus.PUBLISHED,
+        authorId: demoUserId,
+        shipId: post.shipId,
+        siteId: post.siteId,
+        tags: {
+          set: tagConnections,
+        },
+      },
+      create: {
+        slug: post.slug,
+        title: post.title,
+        body: post.body,
+        type: post.type,
+        status: ContentStatus.PUBLISHED,
+        authorId: demoUserId,
+        shipId: post.shipId,
+        siteId: post.siteId,
+        tags: {
+          connect: tagConnections,
+        },
       },
     });
   }
