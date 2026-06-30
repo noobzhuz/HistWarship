@@ -8,15 +8,18 @@ import { useState } from "react";
 import { HeroSearch } from "@/components/home/hero-search";
 import { MapLoader } from "@/components/map/map-loader";
 import { Button } from "@/components/ui/button";
+import type { DiscoveryShip } from "@/lib/home-data";
 import type { AtlasMapSite } from "@/lib/map-data";
-import { ships } from "@/lib/mock-data";
 
-const discoveryOrder = [5, 1, 7, 2, 8, 0, 6, 3, 4];
+const discoveryPageSize = 3;
 
-export function MapHero({ sites }: { sites: AtlasMapSite[] }) {
+export function MapHero({ sites, discoveryShips }: { sites: AtlasMapSite[]; discoveryShips: DiscoveryShip[] }) {
   const [selectedSiteSlug, setSelectedSiteSlug] = useState<string>();
   const [discoveryOffset, setDiscoveryOffset] = useState(0);
-  const discoveryShips = Array.from({ length: 3 }, (_, index) => ships[discoveryOrder[(discoveryOffset + index) % discoveryOrder.length]]).filter(Boolean);
+  const visibleDiscoveryShips = Array.from(
+    { length: Math.min(discoveryPageSize, discoveryShips.length) },
+    (_, index) => discoveryShips[(discoveryOffset + index) % discoveryShips.length],
+  );
 
   return (
     <section className="bg-white lg:grid lg:h-[calc(100svh-4rem)] lg:min-h-[680px] lg:grid-cols-[minmax(360px,42%)_1fr]" aria-labelledby="homepage-heading">
@@ -30,7 +33,7 @@ export function MapHero({ sites }: { sites: AtlasMapSite[] }) {
 
           <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
             <span className="flex items-center gap-1.5"><MapPin className="size-4 text-amber-600" /> {sites.length} museum sites</span>
-            <span className="flex items-center gap-1.5"><Ship className="size-4 text-sky-700" /> {ships.length} historic ships</span>
+            <span className="flex items-center gap-1.5"><Ship className="size-4 text-sky-700" /> {discoveryShips.length} historic ships</span>
           </div>
 
           <div className="mt-8 border-t border-slate-200 pt-7">
@@ -39,14 +42,14 @@ export function MapHero({ sites }: { sites: AtlasMapSite[] }) {
                 <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-sky-800"><Shuffle className="size-4" /> Random Discovery</p>
                 <h2 className="mt-1 text-xl font-black text-slate-950">Ships beyond the familiar names</h2>
               </div>
-              <button type="button" onClick={() => setDiscoveryOffset((current) => (current + 3) % discoveryOrder.length)} className="shrink-0 rounded-full border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100">
+              <button type="button" onClick={() => setDiscoveryOffset((current) => discoveryShips.length > 0 ? (current + discoveryPageSize) % discoveryShips.length : 0)} className="shrink-0 rounded-full border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100">
                 Shuffle
               </button>
             </div>
             <p className="mt-2 text-sm leading-6 text-slate-500">A non-ranked selection from the atlas, chosen to encourage exploration.</p>
 
             <div className="mt-5 grid gap-3">
-              {discoveryShips.map((ship) => (
+              {visibleDiscoveryShips.map((ship) => (
                 <article key={ship.id} className="flex gap-4 rounded-2xl border border-slate-200 p-3 transition hover:border-sky-300 hover:shadow-sm">
                   <Link href={`/ships/${ship.slug}`} className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-slate-800">
                     <Image src={ship.image} alt="" fill className="object-cover" />
