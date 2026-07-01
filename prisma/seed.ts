@@ -1,6 +1,6 @@
 import { ContentStatus, PostType, PrismaClient, ShipType } from "@prisma/client";
 
-import { ships, sites } from "../lib/mock-data";
+import { ships, sites } from "./seed-data";
 
 const prisma = new PrismaClient();
 const demoUserId = "00000000-0000-4000-8000-000000000001";

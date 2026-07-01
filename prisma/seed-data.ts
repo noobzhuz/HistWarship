@@ -1,6 +1,29 @@
-import type { MuseumSite, Ship } from "@/lib/types";
+export type SeedMuseumSite = {
+  id: string;
+  slug: string;
+  name: string;
+  city: string;
+  country: string;
+  coordinates: [number, number];
+  summary: string;
+  image: string;
+  shipSlugs: string[];
+};
 
-export const sites: MuseumSite[] = [
+export type SeedShip = {
+  id: string;
+  slug: string;
+  name: string;
+  className: string;
+  type: string;
+  launched: number;
+  country: string;
+  siteSlug: string;
+  summary: string;
+  image: string;
+};
+
+export const sites: SeedMuseumSite[] = [
   {
     id: "site-salem",
     slug: "united-states-naval-shipbuilding-museum",
@@ -80,7 +103,7 @@ export const sites: MuseumSite[] = [
   },
 ];
 
-export const ships: Ship[] = [
+export const ships: SeedShip[] = [
   {
     id: "ship-salem",
     slug: "uss-salem",
@@ -190,7 +213,3 @@ export const ships: Ship[] = [
     image: "/placeholder-ship.svg",
   },
 ];
-
-export const getSite = (slug: string) => sites.find((site) => site.slug === slug);
-export const getShip = (slug: string) => ships.find((ship) => ship.slug === slug);
-export const getShipsAtSite = (siteSlug: string) => ships.filter((ship) => ship.siteSlug === siteSlug);
