@@ -1,6 +1,8 @@
 # Warship Explorer
 
-A Next.js discovery experience for preserved naval vessels and the museum sites that care for them. This initial scaffold uses mock data only.
+A Next.js discovery experience for preserved naval vessels and the museum sites that care for them.
+
+The app uses the Next.js App Router with Prisma-backed data from Supabase/PostgreSQL. Development seed data lives in `prisma/seed.ts` and `prisma/seed-data.ts`.
 
 ## Included routes
 
@@ -19,13 +21,13 @@ Install Node.js 20.9 or newer, then run:
 ```powershell
 Copy-Item .env.example .env
 npm install
-npm run prisma:generate
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed
 npm run dev
 ```
 
 Open `http://localhost:3000`.
-
-No running database is required for this scaffold. The placeholder connection string only allows Prisma Client generation; the app makes no database queries.
 
 ## Checks
 
