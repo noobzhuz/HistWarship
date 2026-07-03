@@ -6,6 +6,48 @@ The goal is to quickly determine whether the AI has correctly understood the pro
 
 ---
 
+# Ready-to-Use Chat Prompt
+
+Copy the following prompt into a new AI conversation after uploading the project documents.
+
+```
+We're continuing development of my long-term project, Warship Explorer.
+
+Please read AI_HANDOFF.md and PROJECT_CONTEXT.md first.
+
+If the task involves product direction or future planning, also read docs/PRD_EN.md.
+
+Do not begin implementation yet.
+
+First, summarize your understanding of the project.
+
+Please answer these questions briefly:
+
+1. What is the current development phase?
+
+2. What major milestones have already been completed?
+
+3. What do you recommend as the next development milestone?
+
+4. What architectural rules should never be violated?
+
+5. How should we work together on future tasks?
+
+6. If you were taking over this project as the lead engineer today, what development strategy would you recommend for the next few milestones?
+
+7. Do you disagree with any current architectural decisions? If yes, explain why. If no, explain why the current architecture is appropriate.
+
+8. Did you notice any inconsistencies, missing information, or documentation that should be updated before future development?
+
+Keep the response concise (about one page). Do not simply summarize the documents. Demonstrate that you understand the current implementation, architecture, and roadmap.
+
+If everything is clear, we will continue development using the workflow:
+
+Plan → Review → Implement → Verify → Accept → Commit
+```
+
+---
+
 ## Step 1 — Provide Context
 
 At the beginning of a new conversation:

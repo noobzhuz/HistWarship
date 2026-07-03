@@ -162,3 +162,6 @@ This project values:
 When uncertain, preserve the existing architecture rather than introducing a theoretically better design.
 
 The objective is to keep Warship Explorer maintainable over many years of iterative development.
+
+## Beginning A New Conversation
+When a new conversation begins, do not start coding immediately. Wait until the user confirms that your understanding of the project is correct.
