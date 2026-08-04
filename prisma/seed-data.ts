@@ -8,6 +8,19 @@ export type SeedMuseumSite = {
   summary: string;
   image: string;
   shipSlugs: string[];
+  description?: string;
+  address?: string;
+  visitorInfo?: string;
+  accessibilityNotes?: string;
+  visitDurationMinutes?: number;
+  officialWebsite?: string;
+  wikipediaUrl?: string;
+  sourceNotes?: string;
+  openStatus?: "OPEN" | "TEMPORARILY_CLOSED" | "EXTERIOR_ONLY" | "MEMORIAL_ONLY" | "CLOSED" | "UNKNOWN";
+  statusNote?: string;
+  statusSourceUrl?: string;
+  expectedReopenText?: string;
+  expectedReopenDate?: Date;
 };
 
 export type SeedShip = {
@@ -21,6 +34,22 @@ export type SeedShip = {
   siteSlug: string;
   summary: string;
   image: string;
+  hullNumber?: string;
+  commissionedYear?: number;
+  decommissionedYear?: number;
+  preservationStatus?: "PRESERVED" | "PARTIALLY_PRESERVED" | "RESTORATION" | "DISPLAY_ONLY" | "UNKNOWN";
+  openStatus?: "OPEN" | "TEMPORARILY_CLOSED" | "EXTERIOR_ONLY" | "MEMORIAL_ONLY" | "CLOSED" | "UNKNOWN";
+  statusNote?: string;
+  statusSourceUrl?: string;
+  expectedReopenText?: string;
+  expectedReopenDate?: Date;
+  overview?: string;
+  whyVisit?: string;
+  history?: string;
+  technicalInfo?: Record<string, string | number | boolean>;
+  visitorNotes?: string;
+  officialWebsite?: string;
+  wikipediaUrl?: string;
 };
 
 export const sites: SeedMuseumSite[] = [
@@ -45,6 +74,17 @@ export const sites: SeedMuseumSite[] = [
     summary: "A waterfront museum with a varied fleet spanning battleships, submarines, and destroyers.",
     image: "/placeholder-site.svg",
     shipSlugs: ["uss-massachusetts", "uss-lionfish", "uss-joseph-p-kennedy-jr"],
+    description: "Centered on USS Massachusetts, Battleship Cove brings several preserved naval vessels together on the Fall River waterfront. The collection gives visitors an approachable look at life aboard ships of very different sizes and roles.",
+    address: "5 Water Street, Fall River, MA 02721, United States",
+    visitorInfo: "Allow time to explore multiple vessels, with ladders, narrow passageways, and outdoor waterfront areas. Seasonal access and special events can affect what is open, so check the museum website before traveling.",
+    accessibilityNotes: "Access varies by vessel and may involve steep ladders or confined spaces. Visitors with mobility needs should review the museum's current accessibility guidance or contact the museum before visiting.",
+    visitDurationMinutes: 180,
+    officialWebsite: "https://www.battleshipcove.org/",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/Battleship_Cove",
+    sourceNotes: "Development/demo summary based on the museum's public visitor information. Confirm current access and operating details with Battleship Cove.",
+    openStatus: "OPEN",
+    statusNote: "Operating schedules and vessel access can vary by season, weather, maintenance, and special events. Check the official website for current details.",
+    statusSourceUrl: "https://www.battleshipcove.org/visit",
   },
   {
     id: "site-belfast",
@@ -127,6 +167,27 @@ export const ships: SeedShip[] = [
     siteSlug: "battleship-cove",
     summary: "A World War II battleship preserved as the centerpiece of Battleship Cove.",
     image: "/placeholder-ship.svg",
+    hullNumber: "BB-59",
+    commissionedYear: 1942,
+    decommissionedYear: 1947,
+    preservationStatus: "PRESERVED",
+    openStatus: "OPEN",
+    statusNote: "Visit details can change by season or for special events; check Battleship Cove before planning a trip.",
+    statusSourceUrl: "https://www.battleshipcove.org/visit",
+    overview: "USS Massachusetts is a South Dakota-class battleship preserved on the Fall River waterfront. Visitors can explore a major World War II capital ship in the setting of a larger naval museum.",
+    whyVisit: "Big Mamie is worth seeing in person for her scale, preserved battleship spaces, and setting among several other historic vessels at Battleship Cove.",
+    visitorNotes: "Plan enough time for ladders, narrow passageways, and multiple decks. Comfortable shoes are helpful, and visitors with mobility needs should review current access guidance before arriving.",
+    history: "Commissioned in 1942, USS Massachusetts served in World War II in both the Atlantic and Pacific. After decommissioning in 1947, she was preserved in Massachusetts and opened as a museum ship.",
+    technicalInfo: {
+      hullNumber: "BB-59",
+      class: "South Dakota class",
+      lengthFeet: 681,
+      mainBattery: "9 x 16-inch guns",
+      commissioned: 1942,
+      decommissioned: 1947,
+    },
+    officialWebsite: "https://www.battleshipcove.org/uss-massachusetts",
+    wikipediaUrl: "https://en.wikipedia.org/wiki/USS_Massachusetts_(BB-59)",
   },
   {
     id: "ship-lionfish",

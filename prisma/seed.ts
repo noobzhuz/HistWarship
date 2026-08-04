@@ -54,6 +54,41 @@ const getSeedShipName = (ship: (typeof ships)[number]) => {
   return ship.name;
 };
 
+const getSiteEnrichmentData = (site: (typeof sites)[number]) => ({
+  description: site.description,
+  address: site.address,
+  visitorInfo: site.visitorInfo,
+  accessibilityNotes: site.accessibilityNotes,
+  visitDurationMinutes: site.visitDurationMinutes,
+  officialWebsite: site.officialWebsite,
+  wikipediaUrl: site.wikipediaUrl,
+  sourceNotes: site.sourceNotes,
+  openStatus: site.openStatus,
+  statusNote: site.statusNote,
+  statusSourceUrl: site.statusSourceUrl,
+  expectedReopenText: site.expectedReopenText,
+  expectedReopenDate: site.expectedReopenDate,
+});
+
+const getShipEnrichmentData = (ship: (typeof ships)[number]) => ({
+  hullNumber: ship.hullNumber,
+  commissionedYear: ship.commissionedYear,
+  decommissionedYear: ship.decommissionedYear,
+  preservationStatus: ship.preservationStatus,
+  openStatus: ship.openStatus,
+  statusNote: ship.statusNote,
+  statusSourceUrl: ship.statusSourceUrl,
+  expectedReopenText: ship.expectedReopenText,
+  expectedReopenDate: ship.expectedReopenDate,
+  overview: ship.overview,
+  whyVisit: ship.whyVisit,
+  history: ship.history,
+  technicalInfo: ship.technicalInfo,
+  visitorNotes: ship.visitorNotes,
+  officialWebsite: ship.officialWebsite,
+  wikipediaUrl: ship.wikipediaUrl,
+});
+
 const requireSeedTarget = (target: { id: string } | undefined, label: string) => {
   if (!target) {
     throw new Error(`Missing seeded target for demo community content: ${label}.`);
@@ -77,6 +112,7 @@ async function main() {
         latitude: site.coordinates[0].toFixed(6),
         longitude: site.coordinates[1].toFixed(6),
         heroImageUrl: site.image,
+        ...getSiteEnrichmentData(site),
       },
       create: {
         slug: site.slug,
@@ -87,6 +123,7 @@ async function main() {
         latitude: site.coordinates[0].toFixed(6),
         longitude: site.coordinates[1].toFixed(6),
         heroImageUrl: site.image,
+        ...getSiteEnrichmentData(site),
       },
       select: { id: true },
     });
@@ -114,6 +151,7 @@ async function main() {
         launchedYear: ship.launched,
         heroImageUrl: ship.image,
         siteId: site.id,
+        ...getShipEnrichmentData(ship),
       },
       create: {
         slug: ship.slug,
@@ -127,6 +165,7 @@ async function main() {
         launchedYear: ship.launched,
         heroImageUrl: ship.image,
         siteId: site.id,
+        ...getShipEnrichmentData(ship),
       },
       select: { id: true },
     });
