@@ -36,11 +36,12 @@ Completed milestones:
 - Database-backed home page, map page, ship detail pages, site detail pages, and community preview page.
 - Combined search API and client search UI for museum sites and ships.
 - Leaflet map showing museum-site markers with ship links.
+- Enriched ship and museum-site detail pages using existing schema fields for visitor planning, status, deeper descriptions, and sources.
 
 Immediate next priorities:
 
-- Improve page content depth for ships and sites using existing schema fields such as `overview`, `whyVisit`, `visitorInfo`, `visitorNotes`, and source links.
 - Continue UI polish for map/search/detail pages.
+- Expand curated content and imagery beyond the representative enriched seed records.
 - Decide the first authenticated workflow before enabling posting, commenting, uploads, or edit proposals.
 - Replace placeholder images/content where better curated assets are available.
 
@@ -134,8 +135,8 @@ Currently implemented:
 
 - `/`: database-backed home page with map hero, embedded combined search, random discovery list, and community preview.
 - `/map`: full Leaflet map showing museum-site markers and marker popups with ship links.
-- `/sites/[slug]`: database-backed museum site page with hero, location, summary, ships present, and placeholder visitor information panel.
-- `/ships/[slug]`: database-backed ship page with hero, summary, core facts, museum site link, and placeholder discussions section.
+- `/sites/[slug]`: database-backed museum site page with hero, location, about content, visitor planning information, accessibility notes, visit duration, visit status, an external location link, ships present, and sources when available.
+- `/ships/[slug]`: database-backed ship page with hero, summary, expanded facts, overview, why-visit content, visit status, visitor notes, history, technical information, sources, museum site link, and a placeholder discussions section.
 - `/community`: database-backed read-only preview of published discussion/trip-report posts. It explicitly states posting is not active.
 - `/api/search`: combined museum-site and ship search endpoint.
 
@@ -143,7 +144,6 @@ Not currently implemented:
 
 - Authentication UI/workflows.
 - User posting, commenting, uploads, or edit proposal submission.
-- Full visitor information rendering.
 - Real moderation tools.
 - Production image management through Supabase Storage.
 
@@ -217,6 +217,7 @@ Seed data is for local/development preview only.
 - `prisma/seed-data.ts` contains the canonical seed records for current development.
 - `prisma/seed.ts` maps those records into Prisma models using upserts.
 - Seed data currently includes 7 museum sites and 9 ships.
+- USS Massachusetts is the representative enriched ship record, and Battleship Cove is the representative enriched museum-site record used to verify deeper detail-page content.
 - Seed logic also creates tags, one demo user, and demo community posts.
 - Placeholder images currently point to `/placeholder-site.svg` and `/placeholder-ship.svg`.
 
@@ -226,9 +227,9 @@ Do not treat seed data as production truth. It exists to keep development screen
 
 Near-term V1 work should focus on completing discovery rather than expanding into social features too early:
 
-- Enrich ship and site pages with existing data fields.
+- Continue expanding curated ship and site content beyond the representative enriched records.
 - Improve map browsing, search ergonomics, and mobile polish.
-- Add practical visitor information where the schema already supports it.
+- Refine practical visitor information as reliable source material becomes available.
 - Clarify auth architecture before enabling community write actions.
 - Add source attribution and official links where available.
 
@@ -239,14 +240,14 @@ Deferred V2+ items include user image uploads, AI translation, edit proposal UI,
 Current known gaps to remember:
 
 - `heroImageUrl` is used, but most seed records still point to placeholder SVGs.
+- Most seed records remain sparse; USS Massachusetts and Battleship Cove are the representative enriched verification records.
 - `galleryImages` exists in the schema but is not surfaced in the UI.
-- Site `visitorInfo`, `accessibilityNotes`, official links, and status fields are not fully rendered.
-- Ship `overview`, `whyVisit`, `history`, `technicalInfo`, and `visitorNotes` are not fully rendered.
+- Ship technical information renders supported scalar values, including year-like numbers without thousands separators.
 - Map filters are not implemented.
 - Search has basic substring matching; alternate-name array matching is exact.
-- Community UI is preview/read-only despite the broader schema.
-- Auth, uploads, edit proposals, and moderation workflows are not wired into the UI.
-- Some UI panels use placeholder copy for later phases.
+- Community UI remains preview/read-only despite the broader schema, and some panels retain placeholder-oriented copy for later phases.
+- Auth, uploads, posting, commenting, edit proposal submission, moderation, and production storage workflows are not wired into the UI.
+- Ratings, rankings, visited tracking, AI translation, and per-ship map markers remain intentionally excluded.
 - `docs/PRD_CN.md` appears encoding-corrupted/mojibake in the current checkout.
 
 Mention these gaps when relevant, but do not fix them opportunistically unless they are in scope for the current task.

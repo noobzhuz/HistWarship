@@ -147,7 +147,7 @@ export default async function ShipDetailPage({ params }: PageProps) {
   const site = ship.site;
   const shipImage = ship.heroImageUrl ?? "/placeholder-ship.svg";
   const shipType = ship.typeLabel ?? formatShipType(ship.type);
-  const shipClass = ship.shipClass ?? "Class unknown";
+  const shipClass = cleanText(ship.shipClass);
   const siteImage = site.heroImageUrl ?? "/placeholder-site.svg";
   const siteLocation = formatSiteLocation(site);
   const technicalRows = getTechnicalRows(ship.technicalInfo);
@@ -155,7 +155,6 @@ export default async function ShipDetailPage({ params }: PageProps) {
   const expectedReopenDate = formatDate(ship.expectedReopenDate);
   const expectedReopen = cleanText(ship.expectedReopenText) ?? expectedReopenDate;
   const hullNumber = cleanText(ship.hullNumber);
-  const className = cleanText(ship.shipClass);
   const countryName = cleanText(ship.country) ?? cleanText(ship.nation);
   const statusSourceUrl = cleanText(ship.statusSourceUrl);
   const officialWebsite = cleanText(ship.officialWebsite);
@@ -165,6 +164,7 @@ export default async function ShipDetailPage({ params }: PageProps) {
     hasText(ship.statusNote) ||
     hasText(ship.expectedReopenText) ||
     Boolean(ship.expectedReopenDate) ||
+    Boolean(statusUpdatedAt) ||
     Boolean(statusSourceUrl);
   const sourceLinks = [
     officialWebsite ? { label: "Official website", href: officialWebsite } : null,
@@ -173,7 +173,7 @@ export default async function ShipDetailPage({ params }: PageProps) {
   const showSources = sourceLinks.length > 0 || hasText(ship.sourceNotes);
   const rawKeyFacts: Array<InfoItem | null> = [
     hullNumber ? { label: "Hull number", value: hullNumber } : null,
-    className ? { label: "Class", value: className } : null,
+    shipClass ? { label: "Class", value: shipClass } : null,
     { label: "Vessel type", value: shipType },
     countryName ? { label: "Country", value: countryName } : null,
     ship.launchedYear ? { label: "Launched", value: ship.launchedYear } : null,
@@ -194,13 +194,13 @@ export default async function ShipDetailPage({ params }: PageProps) {
           {site && <Button asChild variant="ghost" className="mb-auto w-fit bg-black/20 text-white hover:bg-white/15"><Link href={`/sites/${site.slug}`}><ArrowLeft className="size-4" /> Back to museum site</Link></Button>}
           <Badge className="mb-4 w-fit">{shipType}</Badge>
           <h1 className="text-5xl font-black tracking-tight sm:text-7xl">{ship.name}</h1>
-          <p className="mt-3 text-xl text-slate-200">{shipClass}</p>
+          {shipClass && <p className="mt-3 text-xl text-slate-200">{shipClass}</p>}
         </div>
       </section>
 
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 lg:grid-cols-[1fr_340px] lg:px-8">
         <div>
-          <h2 className="text-3xl font-black text-slate-950">The ship</h2>
+          <h2 className="text-3xl font-black text-slate-950">About this ship</h2>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">{ship.summary}</p>
           {hasText(ship.overview) && <p className="mt-5 max-w-3xl text-base leading-8 text-slate-600">{ship.overview}</p>}
 
@@ -229,22 +229,26 @@ export default async function ShipDetailPage({ params }: PageProps) {
                 <ShieldCheck className="size-6 text-sky-800" />
                 <h2 className="text-2xl font-black text-slate-950">Visit status</h2>
               </div>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                <InfoRow label="Open status" value={formatEnumLabel(ship.openStatus)} />
-                {expectedReopen && <InfoRow label="Expected reopen" value={expectedReopen} />}
-                {statusUpdatedAt && <InfoRow label="Last updated" value={statusUpdatedAt} />}
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Badge className="bg-slate-100 text-slate-800">
+                  {ship.openStatus === "UNKNOWN" ? "Status not confirmed" : formatEnumLabel(ship.openStatus)}
+                </Badge>
+                {expectedReopen && <Badge className="bg-amber-100 text-amber-900">Expected reopen: {expectedReopen}</Badge>}
               </div>
               {hasText(ship.statusNote) && <p className="mt-5 leading-8 text-slate-600">{ship.statusNote}</p>}
-              {statusSourceUrl && (
-                <a
-                  href={statusSourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-sky-800 hover:underline"
-                >
-                  Status source <ExternalLink className="size-4" />
-                </a>
-              )}
+              <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+                {statusUpdatedAt && <p className="text-sm text-slate-500">Status updated {statusUpdatedAt}</p>}
+                {statusSourceUrl && (
+                  <a
+                    href={statusSourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-sky-800 hover:underline"
+                  >
+                    Check current status <ExternalLink className="size-4" />
+                  </a>
+                )}
+              </div>
             </section>
           )}
 
